@@ -17,10 +17,12 @@ public class SentimentBook {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("You called main method");
+		
 		Book myBook = new Book();
 		myBook.addReview("This restaurant at Kona grill is really good. I had the sushi and it was amazing!", 5.0);
 		myBook.addReview("This restaurant sucks and is bad. Sushi was terrible and not amazing. sushi", 1.0);
 		System.out.println(myBook);
+		
 		System.out.println("Finished calling main");
 	}
 
