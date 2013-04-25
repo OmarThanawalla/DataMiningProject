@@ -18,10 +18,39 @@ public class SentimentBook {
 		// TODO Auto-generated method stub
 		System.out.println("You called main method");
 		
-		Book myBook = new Book();
-		myBook.addReview("This restaurant at Kona grill is really good. I had the sushi and it was amazing!", 5.0);
-		myBook.addReview("This restaurant sucks and is bad. Sushi was terrible and not amazing. sushi", 1.0);
-		System.out.println(myBook);
+		//test sentibook
+//		Book myBook = new Book();
+//		myBook.addReview("This restaurant at Kona grill is really good. I had the sushi and it was amazing!", 5.0);
+//		myBook.addReview("This restaurant sucks and is bad. Sushi was terrible and not amazing. sushi", 1.0);
+//		System.out.println(myBook);
+		
+		//test Cluster
+		System.out.println("Begin test 1 \n");
+		Cluster aCluster = new Cluster();
+		Cluster bCluster = new Cluster();
+		System.out.println(aCluster);
+		System.out.println(bCluster);
+		
+		//test number 2 - create UserVector
+		System.out.println("Begin test 2 \n");
+		UserVector aUser = new UserVector();
+		aUser.addReview(1,5.0);
+		aCluster.addUser("Omar", aUser);
+		
+		UserVector bUser = new UserVector();
+		bUser.addReview(2,1.0);
+		aCluster.addUser("Slavcho", bUser);
+		
+		System.out.println(aCluster);
+
+		//test number 3 calculateCenter
+		System.out.println("\n Begin test 3");
+		aCluster.calculateCenter();
+		System.out.println(aCluster);
+		
+		//	//////////////////////////////////////////////////////////////////
+		// || pause now write the Clustering Class Code
+		
 		
 		System.out.println("Finished calling main");
 	}
