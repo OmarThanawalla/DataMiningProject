@@ -49,7 +49,16 @@ public class SentimentBook {
 		System.out.println(aCluster);
 		
 		//	//////////////////////////////////////////////////////////////////
-		// || pause now write the Clustering Class Code
+		// test number 4 create a new review object
+		Reviews myReview = new Reviews("U", "B", 5.0, "I love");
+		System.out.println(myReview);
+		
+		Reviews [] someReviews = new Reviews[1];
+		someReviews[0] = myReview;
+		
+		/*||pause just created someReview array and put a review object in there
+		 * now create Clustering object and pass in someReviews to the loadData method		 * 
+		 * */
 		
 		
 		System.out.println("Finished calling main");
