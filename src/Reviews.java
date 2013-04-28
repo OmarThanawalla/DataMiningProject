@@ -1,4 +1,5 @@
-
+//What does this class do?
+//Represents a review of a user for a business
 public class Reviews {
 
 	String user_id;

@@ -1,7 +1,9 @@
 import java.util.HashMap;
 import java.util.Set;
 
-
+//What does this class do?
+//Represents a cluster of users 
+//has a center
 public class Cluster {
 	
 	HashMap<String, UserVector> users;
@@ -29,7 +31,10 @@ public class Cluster {
 			users.remove(id);
 	}
 	
-	
+	public void empty()
+	{
+		users.clear();
+	}
 	public boolean calculateCenter()
 	{
 		boolean sameCenter = true;
@@ -53,7 +58,10 @@ public class Cluster {
 		return sameCenter;
 	}
 	
-	
+	public double[] getCenter()
+	{
+		return center;
+	}
 	
 	
 	public String toString()

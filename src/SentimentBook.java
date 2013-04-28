@@ -7,6 +7,8 @@ import java.util.StringTokenizer;
 
 
 //STEP 3
+//What does this class do?
+//Represents the senti book object
 
 
 public class SentimentBook {
@@ -50,15 +52,27 @@ public class SentimentBook {
 		
 		//	//////////////////////////////////////////////////////////////////
 		// test number 4 create a new review object
-		Reviews myReview = new Reviews("U", "B", 5.0, "I love");
+		System.out.println("\n Begin test number 4 \n");
+		Reviews myReview = new Reviews("myUserID1", "myBusinessID1", 5.0, "I love");
+		Reviews yourReview = new Reviews("myUserID2", "myBusinessID2", 2.0, "I hate");
 		System.out.println(myReview);
 		
-		Reviews [] someReviews = new Reviews[1];
+		Reviews [] someReviews = new Reviews[2];
 		someReviews[0] = myReview;
+		someReviews[1] = yourReview;
 		
+		//test number 5, loadData into Clustering object
+		System.out.println("\n Begin test number 5 \n");
 		/*||pause just created someReview array and put a review object in there
 		 * now create Clustering object and pass in someReviews to the loadData method		 * 
 		 * */
+		//create Clustering object
+		
+		Clustering clustering1 = new Clustering();
+		clustering1.loadData(someReviews);
+		//System.out.println(clustering1);
+		clustering1.printBusinesses();
+		clustering1.printUsers();
 		
 		
 		System.out.println("Finished calling main");

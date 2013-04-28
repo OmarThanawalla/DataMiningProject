@@ -1,4 +1,5 @@
-
+//What does this class do?
+//represents a user's ranking of restuarants
 public class UserVector {
 	
 	public static int globalNumberOfRest = 100; //assign this!!!
