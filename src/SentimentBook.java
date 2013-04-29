@@ -55,7 +55,7 @@ public class SentimentBook {
 		System.out.println("\n Begin test number 4 \n");
 		Reviews myReview = new Reviews("myUserID1", "myBusinessID1", 5.0, "I love");
 		Reviews yourReview = new Reviews("myUserID2", "myBusinessID2", 1.0, "I hate");
-		Reviews theirReview = new Reviews("myUserID3","myBusinessID2", 1.0, "I doubt");
+		Reviews theirReview = new Reviews("myUserID3","myBusinessID2", 1.0, "I love");
 		System.out.println(myReview);
 		
 		Reviews [] someReviews = new Reviews[3];
@@ -76,6 +76,10 @@ public class SentimentBook {
 		clustering1.printBusinesses();
 		clustering1.printUsers();
 		
+		//test number 5.5, test loading of userReviews 
+		System.out.println("\nBeging test number 5.5: test loading of userReviews hashmap through load method call \n");
+		clustering1.printUserReviews();
+		
 		//test number 6, test performKmeans
 		System.out.println("\n Begin test number 6: test performKmeans \n");
 		
@@ -84,6 +88,29 @@ public class SentimentBook {
 		{
 			System.out.println();
 			System.out.println(c);
+		}
+		
+		
+		//test number 7, locateUser
+		System.out.println("\n Begin test number 7: locate User \n");
+		Cluster rslt = clustering1.locateUser("myUserID1");
+		System.out.println("myBusinessID1 is in cluster: " + rslt.clusterId +"\n");
+		
+		//test number 7.5, status of sentibook
+		System.out.println("\n Begin test number 7.5: status of senti book \n");
+		System.out.println(clustering1.mySenti);
+		
+		//test number 8, reweightReviews
+		System.out.println("\nBegin test number 8: reweightReviews \n");
+		double [][] myMatrix = clustering1.reweightReviews("myUserID2");
+		
+		for(int i = 0; i < myMatrix.length; i++)
+		{
+			for(int j = 0; j < myMatrix[0].length; j++)
+			{
+				System.out.print(myMatrix[i][j] + ", ");
+			}
+			System.out.println();
 		}
 		
 		System.out.println("Finished calling main");
@@ -95,7 +122,7 @@ public class SentimentBook {
 
 class Book
 {
-	private HashMap<String, ArrayList<Double>> sentiBook;
+	public HashMap<String, ArrayList<Double>> sentiBook;
 	
 	//initialize the sentiBook
 	public Book()

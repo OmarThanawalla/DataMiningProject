@@ -8,7 +8,7 @@ public class Cluster {
 	
 	HashMap<String, UserVector> users;
 	static int clusterNumber = 0; //test this!
-	int clusterId;
+	public int clusterId;
 	double[] center;
 	
 	public Cluster()

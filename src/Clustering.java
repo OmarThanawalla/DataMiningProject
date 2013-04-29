@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 //What does this class do?
 //Holds clusters, businesses, users 
@@ -9,7 +10,10 @@ public class Clustering
 	HashMap<String, Integer> businesses;
 	public ArrayList<Cluster> clusters;
 	HashMap<String, UserVector> users;
+	HashMap<String, ArrayList<Reviews>> userReviews;
 	static int  nextInt = 0;
+	public static double P = 0.5;
+	public Book mySenti;
 	
 	
 	public Clustering()
@@ -17,7 +21,8 @@ public class Clustering
 		businesses = new HashMap<String, Integer>();
 		clusters = new ArrayList<Cluster>();
 		users = new HashMap<String,UserVector>();
-		
+		userReviews = new HashMap<String, ArrayList<Reviews>>();
+		mySenti = new Book(); 
 	}
 	
 	//loading the data
@@ -39,6 +44,14 @@ public class Clustering
 			}
 			uv.addReview(businesses.get(AReview.business_id),AReview.rating);
 			users.put(AReview.user_id, uv);
+			ArrayList<Reviews> listOfReviews = userReviews.get(AReview.user_id);
+			if(listOfReviews == null)
+			{
+				listOfReviews = new ArrayList<Reviews>();
+			}
+			listOfReviews.add(AReview);
+			mySenti.addReview(AReview.text, AReview.rating);
+			userReviews.put(AReview.user_id, listOfReviews);
 		}
 		
 	}
@@ -123,6 +136,55 @@ public class Clustering
 	{
 		System.out.println(users);
 	}
+	public void printUserReviews()
+	{
+		System.out.println(userReviews);
+	}
 	
+	public Cluster locateUser(String id)
+	{
+		for(Cluster myCluster : clusters)
+		{
+			if(myCluster.users.containsKey(id))
+			{
+				return myCluster;
+			}
+		}
+		return null;
+	}
+	
+	public double[][] reweightReviews(String id)
+	{
+		Cluster targetCluster = locateUser(id);
+		double[][] Matrix = new double [targetCluster.users.size()][businesses.size()];
+		int i = 0;
+		for(Entry<String, UserVector> e : targetCluster.users.entrySet())
+		{
+			ArrayList<Reviews> userRev = userReviews.get(e.getKey());
+			for(Reviews r : userRev)
+			{
+				StringTokenizer tkn = new StringTokenizer(r.text);
+				int num_words = 0;
+				double total_score = 0.0;
+				
+				while(tkn.hasMoreTokens())
+				{
+					ArrayList<Double> values = mySenti.sentiBook.get(tkn.nextToken());
+					if(values != null) 
+					{
+						total_score = total_score +  values.get(1);
+						num_words = num_words + 1 ;
+					}
+				}
+				if(num_words != 0)
+				{
+					total_score = total_score / num_words;
+				}
+				Matrix[i][businesses.get(r.business_id)] = (P * r.rating) + ((1-P)*total_score);
+			}
+			i++;
+		}
+		return Matrix;
+	}
 
 }
