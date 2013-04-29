@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 //What does this class do?
 //Holds clusters, businesses, users 
 public class Clustering 
 {
 	HashMap<String, Integer> businesses;
-	ArrayList<Cluster> clusters;
+	public ArrayList<Cluster> clusters;
 	HashMap<String, UserVector> users;
 	static int  nextInt = 0;
 	
@@ -50,14 +51,38 @@ public class Clustering
 		{
 			Cluster aCluster = new Cluster();
 			//put cluster into Array Cluster
-			//|| pause continue programming k means. youare on on putting them in ArrayClusters!
+			clusters.add(aCluster);
 		}
-		//put them into ArrayClusters
 		boolean done = false;
-		
-		while(!done)
+		int numberOfSteps = 0;
+		while(!done && (numberOfSteps < 100))
 		{
-			
+			numberOfSteps++;
+			for(Cluster cl : clusters)
+			{
+				cl.empty();
+			}
+			done = true;
+			for(Entry<String, UserVector> e : users.entrySet())
+			{
+				Cluster closestCluster = null;
+				double minDistance = 1000000.0;
+				for(Cluster myCluster : clusters)
+				{
+					double [] myClusterCenter = myCluster.getCenter();
+					double dist = getDistance(e.getValue().userVector,myClusterCenter);
+					if(dist < minDistance)
+					{
+						minDistance = dist;
+						closestCluster = myCluster;
+					}
+				}
+			closestCluster.addUser(e.getKey(), e.getValue());
+			}
+			for(Cluster c : clusters)
+			{
+				done = done & c.calculateCenter();
+			}
 		}
 	}
 	

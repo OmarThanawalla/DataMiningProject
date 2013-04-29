@@ -3,7 +3,7 @@
 public class UserVector {
 	
 	public static int globalNumberOfRest = 100; //assign this!!!
-	double[] userVector;
+	public double[] userVector;
 	
 	public UserVector()
 	{

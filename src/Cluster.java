@@ -50,9 +50,14 @@ public class Cluster {
 		}
 		for(int i = 0; i < UserVector.globalNumberOfRest; i++)
 		{
-			newCenter[i] /= users.size();
+			if(users.size() != 0)
+			{
+				newCenter[i] /= users.size();
+			}
 		    if(center[i] != newCenter[i]) 
+		    {
 		    	sameCenter = false;
+		    }
 		    center[i] = newCenter[i];
 		}
 		return sameCenter;

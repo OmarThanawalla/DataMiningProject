@@ -54,12 +54,14 @@ public class SentimentBook {
 		// test number 4 create a new review object
 		System.out.println("\n Begin test number 4 \n");
 		Reviews myReview = new Reviews("myUserID1", "myBusinessID1", 5.0, "I love");
-		Reviews yourReview = new Reviews("myUserID2", "myBusinessID2", 2.0, "I hate");
+		Reviews yourReview = new Reviews("myUserID2", "myBusinessID2", 1.0, "I hate");
+		Reviews theirReview = new Reviews("myUserID3","myBusinessID2", 1.0, "I doubt");
 		System.out.println(myReview);
 		
-		Reviews [] someReviews = new Reviews[2];
+		Reviews [] someReviews = new Reviews[3];
 		someReviews[0] = myReview;
 		someReviews[1] = yourReview;
+		someReviews[2] = theirReview;
 		
 		//test number 5, loadData into Clustering object
 		System.out.println("\n Begin test number 5 \n");
@@ -74,6 +76,15 @@ public class SentimentBook {
 		clustering1.printBusinesses();
 		clustering1.printUsers();
 		
+		//test number 6, test performKmeans
+		System.out.println("\n Begin test number 6: test performKmeans \n");
+		
+		clustering1.performKmeans(2);
+		for(Cluster c : clustering1.clusters)
+		{
+			System.out.println();
+			System.out.println(c);
+		}
 		
 		System.out.println("Finished calling main");
 	}
