@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -15,8 +16,37 @@ public class SentimentBook {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		ArrayList<Reviews> mydata = JSON_Parser.parseYelpData();
+		int size = mydata.size();
+		Reviews[] someReviews = new Reviews[size];
+		for(int i = 0; i < size; ++i)
+		  someReviews[i] = mydata.get(i);
+		
+		Clustering clustering1 = new Clustering();
+		clustering1.loadData(someReviews);
+		clustering1.performKmeans(4);
+        double [][] myMatrix = clustering1.reweightReviews("ynGxw3zZqAjahVou563zXQ");
+		double[] result = getAvgRatings(myMatrix);
+		for(int i = 0; i < result.length; ++i) {
+			for(Entry<String, Integer> e : clustering1.businesses.entrySet()) {
+				if(e.getValue().equals(i)) System.out.print("business: " + e.getKey() + "; ");
+			}
+			System.out.println("rating: " + result[i]);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.out.println("You called main method");
 		
@@ -58,16 +88,23 @@ public class SentimentBook {
 		Reviews theirReview = new Reviews("myUserID3","myBusinessID2", 1.0, "I love");
 		System.out.println(myReview);
 		
-		Reviews [] someReviews = new Reviews[3];
+		//Load all the Yelp Data
+		System.out.println("\n Begin loading all the Yelp data: \n");
+		Reviews [] someReviews;
+				
+		ArrayList<Reviews> mydata = JSON_Parser.parseYelpData();
+		int size = mydata.size();
+		someReviews = new Reviews[size+3];
+		for(int i = 0; i < size; ++i)
+		  someReviews[i+3] = mydata.get(i);	
+		
 		someReviews[0] = myReview;
 		someReviews[1] = yourReview;
 		someReviews[2] = theirReview;
 		
 		//test number 5, loadData into Clustering object
 		System.out.println("\n Begin test number 5 \n");
-		/*||pause just created someReview array and put a review object in there
-		 * now create Clustering object and pass in someReviews to the loadData method		 * 
-		 * */
+
 		//create Clustering object
 		
 		Clustering clustering1 = new Clustering();
@@ -83,7 +120,7 @@ public class SentimentBook {
 		//test number 6, test performKmeans
 		System.out.println("\n Begin test number 6: test performKmeans \n");
 		
-		clustering1.performKmeans(2);
+		clustering1.performKmeans(1);
 		for(Cluster c : clustering1.clusters)
 		{
 			System.out.println();
@@ -112,8 +149,28 @@ public class SentimentBook {
 			}
 			System.out.println();
 		}
-		
-		System.out.println("Finished calling main");
+	
+		System.out.println("\nRESULT\n");
+		double[] result = getAvgRatings(myMatrix);
+		for(int i = 0; i < result.length; ++i) {
+			System.out.print(result[i] + ", ");
+		}
+		System.out.println("\nFinished calling main ");
+	}*/
+	
+	public static double[] getAvgRatings(double[][] m) {
+		double[] ans = new double[m[0].length];
+		double[] cnt = new double[m[0].length];
+		for(int i = 0; i < m.length; ++i) {
+			for(int j = 0; j < m[0].length; ++j) {
+				ans[j] += m[i][j]; 
+				if(m[i][j] != 0) cnt[j]++;
+			}
+		}
+		for(int i = 0; i < m[0].length; i++) {
+			if(cnt[i] != 0) ans[i] /= cnt[i];
+		}
+		return ans;
 	}
 
 }

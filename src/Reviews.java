@@ -16,6 +16,13 @@ public class Reviews {
 		text = myText;
 	}
 	
+	public Reviews(YelpReview y) {
+		user_id = y.user_id;
+		business_id = y.business_id;
+		rating = y.stars;
+		text = y.text;
+	}
+	
 	public String toString()
 	{
 		return ("user id: "+ user_id + " business id: " + business_id + " rating: " + rating + "\n text: " + text);
