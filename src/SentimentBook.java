@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,17 +28,34 @@ public class SentimentBook {
 		for(int i = 0; i < size; ++i)
 		  someReviews[i] = mydata.get(i);
 		
+		File file = new File("/Users/omarthanawalla/Documents/workspace/SentimentBook/src/result.txt");
+		if (!file.exists()) file.createNewFile();
+					
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
 		Clustering clustering1 = new Clustering();
 		clustering1.loadData(someReviews);
 		clustering1.performKmeans(4);
-        double [][] myMatrix = clustering1.reweightReviews("ynGxw3zZqAjahVou563zXQ");
-		double[] result = getAvgRatings(myMatrix);
-		for(int i = 0; i < result.length; ++i) {
-			for(Entry<String, Integer> e : clustering1.businesses.entrySet()) {
-				if(e.getValue().equals(i)) System.out.print("business: " + e.getKey() + "; ");
+		int num = 0;
+		for(Cluster c : clustering1.clusters) {
+			System.out.println("Check");
+			bw.write("Cluster" + (++num));
+			bw.newLine();
+			String user_id = c.users.keySet().iterator().next();
+			double [][] myMatrix = clustering1.reweightReviews(user_id);
+			double[] result = getAvgRatings(myMatrix);
+			for(int i = 0; i < result.length; ++i) {
+				for(Entry<String, Integer> e : clustering1.businesses.entrySet()) {
+					if(e.getValue().equals(i)) 
+						bw.write("business: " + e.getKey() + "; ");
+				}
+				bw.write("rating: " + result[i]);
 			}
-			System.out.println("rating: " + result[i]);
+			bw.newLine();
 		}
+		bw.close();
+		//print out all the users reviews in a cluster, printout the avaerage review for that cluster
 	}
 	
 	
