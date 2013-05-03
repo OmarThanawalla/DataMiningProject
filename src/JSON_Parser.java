@@ -6,34 +6,58 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
+// Yelp Data JSON Parser
 public class JSON_Parser {
+	
+    private static String file_path1 = "C:\\Users\\Slav\\Desktop\\DataMining\\DataMiningProject\\src\\yelp_academic_dataset_review.json";
+    private static String file_path2 = "C:\\Users\\Slav\\Desktop\\DataMining\\DataMiningProject\\src\\yelp_academic_dataset_business.json";
+    private static int limit = 15000;
     
-    public static ArrayList<Reviews> parseYelpData() throws IOException{
-    	File file = new File("/Users/omarthanawalla/Documents/workspace/SentimentBook/src/yelp_academic_dataset_review.json");
+	// Yelp Review Parsing
+    public static ArrayList<YelpReview> parseYelpReviews() throws IOException {
+    	File file = new File(file_path1);
     	FileReader fr = new FileReader(file);
     	BufferedReader bfr = new BufferedReader(fr);
     	
-    	ArrayList<Reviews> data = new ArrayList<Reviews>();  
+    	ArrayList<YelpReview> data = new ArrayList<YelpReview>();  
     	String json = new String();
-    	int i = 0;
-    	while ((json = bfr.readLine()) != null && (i < 500)) {
+    	int record_number = 0;
+    	while ((json = bfr.readLine()) != null && (record_number < limit)) {
     		// Parse the JSON review
-    		
-    		YelpReview yelp_rev = new Gson().fromJson(json, YelpReview.class);
-    		System.out.println(i++);
-    		data.add(new Reviews(yelp_rev));
+    		YelpReview review = new Gson().fromJson(json, YelpReview.class);
+    		data.add(review); ++record_number;
     	}
         
-        bfr.close();
-        fr.close();
+        bfr.close(); fr.close();
         return data;
     }
     
-   /* public static void main(String[] args) throws Exception {  
-    	ArrayList<Reviews> reviews = parseYelpData();
+    // Yelp Business Parsing
+    public static ArrayList<YelpBusiness> parseYelpBusinesses() throws IOException {
+    	File file = new File(file_path2);
+    	FileReader fr = new FileReader(file);
+    	BufferedReader bfr = new BufferedReader(fr);
+    	
+    	ArrayList<YelpBusiness> data = new ArrayList<YelpBusiness>();  
+    	String json = new String();
+    	while ((json = bfr.readLine()) != null) {
+    		// Parse the JSON business
+    		YelpBusiness business = new Gson().fromJson(json, YelpBusiness.class);
+    		data.add(business);
+    	}
+        
+        bfr.close(); fr.close();
+        return data;
+    }
+    
+    // For Testing
+    public static void main(String[] args) throws Exception {  
+    	//ArrayList<YelpReview> reviews = parseYelpReviews();
     	//System.out.println("Number Reviews: " + reviews.size() + "\n");
-    	//for(Reviews review : reviews) {
-    	//	System.out.println(review);
-    	//}
-    }*/
+    	//for(YelpReview review : reviews) System.out.println(review);
+    	
+    	//ArrayList<YelpBusiness> businesses = parseYelpBusinesses();
+    	//System.out.println("Number Reviews: " + businesses.size() + "\n");
+    	//for(YelpBusiness business : businesses) System.out.println(business);
+    }
 }

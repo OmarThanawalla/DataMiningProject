@@ -13,38 +13,6 @@ import java.util.StringTokenizer;
 
 
 public class SentimentBook {
-
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-	public static void main(String[] args) throws IOException {
-		ArrayList<Reviews> mydata = JSON_Parser.parseYelpData();
-		int size = mydata.size();
-		Reviews[] someReviews = new Reviews[size];
-		for(int i = 0; i < size; ++i)
-		  someReviews[i] = mydata.get(i);
-		
-		Clustering clustering1 = new Clustering();
-		clustering1.loadData(someReviews);
-		clustering1.performKmeans(4);
-        double [][] myMatrix = clustering1.reweightReviews("ynGxw3zZqAjahVou563zXQ");
-		double[] result = getAvgRatings(myMatrix);
-		for(int i = 0; i < result.length; ++i) {
-			for(Entry<String, Integer> e : clustering1.businesses.entrySet()) {
-				if(e.getValue().equals(i)) System.out.print("business: " + e.getKey() + "; ");
-			}
-			System.out.println("rating: " + result[i]);
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/*public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub

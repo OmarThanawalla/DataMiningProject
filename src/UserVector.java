@@ -1,12 +1,12 @@
-//What does this class do?
-//represents a user's ranking of restuarants
+// Represent a user's ranking of restaurants
 public class UserVector {
 	
-	public static int globalNumberOfRest = 500; //assign this!!!
+	public static int globalNumberOfRest;
 	public double[] userVector;
 	
 	public UserVector()
 	{
+		globalNumberOfRest = PersonalizedReviews.getNumBusinesses();
 		userVector = new double[globalNumberOfRest];
 	}
 

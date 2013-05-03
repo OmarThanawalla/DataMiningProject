@@ -6,7 +6,7 @@ import java.util.Set;
 //has a center
 public class Cluster {
 	
-	HashMap<String, UserVector> users;
+	HashMap<Integer, UserVector> users;
 	static int clusterNumber = 0; //test this!
 	public int clusterId;
 	double[] center;
@@ -15,17 +15,19 @@ public class Cluster {
 	{
 		clusterId = clusterNumber;
 		clusterNumber++;
-		users = new HashMap<String,UserVector>();
+		users = new HashMap<Integer,UserVector>();
 		center = new double[UserVector.globalNumberOfRest];
-		center[0] = clusterNumber;
+		//center[0] = clusterNumber;
+		for(int i = 0; i < center.length; ++i)
+			center[i] = Math.random() * 5;
 	}
 	
-	public void addUser(String id, UserVector aUser)
+	public void addUser(Integer id, UserVector aUser)
 	{
 		users.put(id, aUser);
 	}
 	
-	public void removeUser(String id)
+	public void removeUser(Integer id)
 	{
 		if(users.containsKey(id))
 			users.remove(id);
@@ -35,6 +37,7 @@ public class Cluster {
 	{
 		users.clear();
 	}
+	
 	public boolean calculateCenter()
 	{
 		boolean sameCenter = true;
@@ -68,6 +71,9 @@ public class Cluster {
 		return center;
 	}
 	
+	public int size() {
+		return users.size();
+	}
 	
 	public String toString()
 	{
@@ -80,9 +86,9 @@ public class Cluster {
 		}
 		output += "\n";
 		
-		Set<String> user_ids = users.keySet();
+		Set<Integer> user_ids = users.keySet();
 		
-		for(String user: user_ids)
+		for(Integer user: user_ids)
 		{
 			output+= user + ", ";
 		}
