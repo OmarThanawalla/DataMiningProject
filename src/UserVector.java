@@ -1,23 +1,31 @@
-// Represent a user's ranking of restaurants
+import java.util.HashMap;
+import java.util.Map.Entry;
+
+// User's Ratings of Businesses
 public class UserVector {
+	private HashMap<Integer, Double> userVector;
 	
-	public static int globalNumberOfRest;
-	public double[] userVector;
-	
-	public UserVector()
-	{
-		globalNumberOfRest = PersonalizedReviews.getNumBusinesses();
-		userVector = new double[globalNumberOfRest];
+	public UserVector() {
+		userVector = new HashMap<Integer, Double>();
 	}
 
-	public void addReview(int idx, double score)
-	{
-		userVector[idx] = score;
+	public HashMap<Integer, Double> getVector() {
+		return userVector;
+	}
+
+	public void addReview(Integer idx, Double rating) {
+		userVector.put(idx, rating);
 	}
 	
-	public double getReview(int idx)
-	{
-		return userVector[idx];
+	public Double getReview(Integer idx) {
+		return userVector.get(idx);
 	}
 	
+	public double[] toArray(int dimensions) {
+		double[] arr = new double[dimensions];
+		for(Entry<Integer, Double> e : userVector.entrySet()) {
+			arr[e.getKey()] = e.getValue();
+		}
+		return arr;
+	}
 }
