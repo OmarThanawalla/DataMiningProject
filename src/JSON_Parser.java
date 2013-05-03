@@ -6,11 +6,16 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
+// Yelp Data JSON Parser
 public class JSON_Parser {
 	
     private static String file_path1 = "C:\\Users\\Slav\\Desktop\\DataMining\\DataMiningProject\\src\\yelp_academic_dataset_review.json";
     private static String file_path2 = "C:\\Users\\Slav\\Desktop\\DataMining\\DataMiningProject\\src\\yelp_academic_dataset_business.json";
+<<<<<<< HEAD
     private static int limit = 20000;
+=======
+    private static int limit = 15000;
+>>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
     
 	// Yelp Review Parsing
     public static ArrayList<YelpReview> parseYelpReviews() throws IOException {
@@ -49,6 +54,7 @@ public class JSON_Parser {
         return data;
     }
     
+<<<<<<< HEAD
     /* public static void main(String[] args) throws Exception {  
     	ArrayList<YelpReview> reviews = parseYelpReviews();
     	System.out.println("Number Reviews: " + reviews.size() + "\n");
@@ -58,4 +64,16 @@ public class JSON_Parser {
     	System.out.println("Number Businesses: " + businesses.size() + "\n");
     	for(YelpBusiness business : businesses) System.out.println(business);
     } */
+=======
+    // For Testing
+    public static void main(String[] args) throws Exception {  
+    	//ArrayList<YelpReview> reviews = parseYelpReviews();
+    	//System.out.println("Number Reviews: " + reviews.size() + "\n");
+    	//for(YelpReview review : reviews) System.out.println(review);
+    	
+    	//ArrayList<YelpBusiness> businesses = parseYelpBusinesses();
+    	//System.out.println("Number Reviews: " + businesses.size() + "\n");
+    	//for(YelpBusiness business : businesses) System.out.println(business);
+    }
+>>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
 }
