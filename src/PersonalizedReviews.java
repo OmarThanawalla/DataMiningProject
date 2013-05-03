@@ -21,11 +21,7 @@ public class PersonalizedReviews {
 	private int nextFreeUserIdx = 0;
 	private int nextFreeBusinessIdx = 0;
 	
-<<<<<<< HEAD
 	public static int clustering_coeff = 1;
-=======
-	public static int clustering_coeff = 2;
->>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
 	double[] yelpRatings;
 	
 	public static void main(String[] args) throws IOException {
@@ -41,10 +37,7 @@ public class PersonalizedReviews {
 		ArrayList<YelpReview> yelpReviews = JSON_Parser.parseYelpReviews();
 		ArrayList<YelpBusiness> yelpBusinesses = JSON_Parser.parseYelpBusinesses();
 		loadData(yelpReviews, yelpBusinesses); // Load Data
-<<<<<<< HEAD
 		EvaluateModel.loadData(reviews); // For Evaluation
-=======
->>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
 		yelpReviews = null; yelpBusinesses = null; // Free Resources
 		System.out.println("Loading data Completed!");
 		datasetInfo();
@@ -52,7 +45,6 @@ public class PersonalizedReviews {
 		setClusteringCoeff(2);
 		System.out.println("Clustering coefficient set to " + clustering_coeff);
 		
-<<<<<<< HEAD
 		System.out.println("Performing Sentiment Analysis...");
 		SentimentBook dict = new SentimentBook();
 		dict.addReviews(reviews);
@@ -61,10 +53,6 @@ public class PersonalizedReviews {
 		
 		System.out.println("Running K-Means clustering...");
 		Clustering clustering1 = new Clustering(num_businesses);
-=======
-		System.out.println("Running K-Means clustering...");
-		Clustering clustering1 = new Clustering();
->>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
 		clustering1.loadData(reviews);
 		clustering1.performKmeans(clustering_coeff);
 		System.out.println("K-Means clustering Completed!");
@@ -74,37 +62,15 @@ public class PersonalizedReviews {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 		System.out.println("Generating Personalized ratings...");
-<<<<<<< HEAD
 		
 		// Personalized Ratings...
 		
-=======
-		/*
-		int num = 0;
-		for(Cluster c : clustering1.clusters) 
-		  if(c.users.size() > 0) {
-			System.out.println("Check");
-			bw.write("Cluster" + (++num) + ":\n");
-			Integer user_id = c.users.keySet().iterator().next();
-			double [][] myMatrix = clustering1.reweightReviews(user_id);
-			double[] result = Clustering.getAvgRatings(myMatrix);
-			for(int i = 0; i < result.length; ++i) {
-				bw.write("business: " + idxToBusiness.get(i) + "; ");
-				bw.write("rating: " + result[i] + "\n");
-			}
-		} bw.close();
-		*/
->>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
 		System.out.println("Personalized reviews Generated!");
 		System.out.println("Calculating Performance Gain...");
 		double gain = EvaluateModel.calculateError(clustering1, yelpRatings);
 		System.out.println("Gain Factor = " + gain);
 	}
 	
-<<<<<<< HEAD
-=======
-	// Constructor
->>>>>>> f5c79045ed2a01a6fd0501a7f9d2efd5ffdce148
 	public PersonalizedReviews() {
 		userToIdx = new HashMap<String, Integer>();
 		idxToUser  = new ArrayList<String>();
