@@ -7,53 +7,45 @@ import java.util.StringTokenizer;
 //Holds clusters, businesses, users 
 public class Clustering 
 {
-	HashMap<String, Integer> businesses;
 	public ArrayList<Cluster> clusters;
-	HashMap<String, UserVector> users;
-	HashMap<String, ArrayList<Reviews>> userReviews;
-	static int  nextInt = 0;
+	public HashMap<Integer, UserVector> users;
+	public HashMap<Integer, ArrayList<Review>> userReviews;
+	
 	public static double P = 0.5;
 	public Book mySenti;
 	
-	
+	// Constructor
 	public Clustering()
 	{
-		businesses = new HashMap<String, Integer>();
 		clusters = new ArrayList<Cluster>();
-		users = new HashMap<String,UserVector>();
-		userReviews = new HashMap<String, ArrayList<Reviews>>();
-		mySenti = new Book(); 
+		users = new HashMap<Integer, UserVector>();
+		userReviews = new HashMap<Integer, ArrayList<Review>>();
+		mySenti = new Book();
 	}
 	
 	//loading the data
-	public void loadData(Reviews [] reviews) 
+	public void loadData(Review[] reviews) 
 	{
-		for(Reviews AReview : reviews)
+		//int num_users = 0;
+		for(Review AReview : reviews)
 		{
-			
-			if(!businesses.containsKey(AReview.business_id))
-			  {
-				//insert business into hashmap
-			    businesses.put(AReview.business_id, nextInt);
-			    nextInt++;
-			  }
 			UserVector uv = users.get(AReview.user_id);
 			if(uv == null)
 			{
+				//System.out.println(num_users++);
 				uv = new UserVector(); //create new user
 			}
-			uv.addReview(businesses.get(AReview.business_id),AReview.rating);
+			uv.addReview(AReview.business_id,AReview.rating);
 			users.put(AReview.user_id, uv);
-			ArrayList<Reviews> listOfReviews = userReviews.get(AReview.user_id);
+			ArrayList<Review> listOfReviews = userReviews.get(AReview.user_id);
 			if(listOfReviews == null)
 			{
-				listOfReviews = new ArrayList<Reviews>();
+				listOfReviews = new ArrayList<Review>();
 			}
 			listOfReviews.add(AReview);
 			mySenti.addReview(AReview.text, AReview.rating);
 			userReviews.put(AReview.user_id, listOfReviews);
 		}
-		
 	}
 	
 	//perform k means
@@ -76,21 +68,22 @@ public class Clustering
 				cl.empty();
 			}
 			done = true;
-			for(Entry<String, UserVector> e : users.entrySet())
+			for(int idx = 0; idx < users.size(); ++idx)
 			{
+				UserVector e = users.get(idx);
 				Cluster closestCluster = null;
 				double minDistance = 1000000.0;
 				for(Cluster myCluster : clusters)
 				{
 					double [] myClusterCenter = myCluster.getCenter();
-					double dist = getDistance(e.getValue().userVector,myClusterCenter);
+					double dist = getDistance(e.userVector,myClusterCenter);
 					if(dist < minDistance)
 					{
 						minDistance = dist;
 						closestCluster = myCluster;
 					}
 				}
-			closestCluster.addUser(e.getKey(), e.getValue());
+			closestCluster.addUser(new Integer(idx), e);
 			}
 			for(Cluster c : clusters)
 			{
@@ -101,18 +94,19 @@ public class Clustering
 	
 	public double getDistance(double[] v1, double [] v2)
 	{
-		double dist = 0.0;
+		double dist = 0.0; // Euclidean distance
+		int smc = 1; // Simple matching coefficient
+		
 		for(int i = 0; i < v1.length; i++)
-		{
-			dist += Math.pow(el_dist(v1[i],v2[i]),2);
+		  if(v1[i] != 0.0 && v2[i] != 0.0) {
+			// User Rating Exists
+			dist += Math.pow(v1[i] - v2[i], 2);
+			++smc; // For normalization
 		}
-		return Math.sqrt(dist);
+		
+		if(smc == 0) return 10.0; // infinite
+		else return Math.sqrt(dist) / smc;
 	}
-	public double el_dist(double x, double y)
-	{
-		return (x-y); //euclideian distance
-	}
-	
 	
 	//write toString method to test Clustering class
 	public String toString()
@@ -128,10 +122,6 @@ public class Clustering
 		return result;
 	}
 	
-	public void printBusinesses()
-	{
-		System.out.println(businesses);
-	}
 	public void printUsers()
 	{
 		System.out.println(users);
@@ -141,7 +131,7 @@ public class Clustering
 		System.out.println(userReviews);
 	}
 	
-	public Cluster locateUser(String id)
+	public Cluster locateUser(Integer id)
 	{
 		for(Cluster myCluster : clusters)
 		{
@@ -153,15 +143,15 @@ public class Clustering
 		return null;
 	}
 	
-	public double[][] reweightReviews(String id)
+	public double[][] reweightReviews(Integer id)
 	{
 		Cluster targetCluster = locateUser(id);
-		double[][] Matrix = new double [targetCluster.users.size()][businesses.size()];
+		double[][] Matrix = new double [targetCluster.users.size()][UserVector.globalNumberOfRest];
 		int i = 0;
-		for(Entry<String, UserVector> e : targetCluster.users.entrySet())
+		for(Entry<Integer, UserVector> e : targetCluster.users.entrySet())
 		{
-			ArrayList<Reviews> userRev = userReviews.get(e.getKey());
-			for(Reviews r : userRev)
+			ArrayList<Review> userRev = userReviews.get(e.getKey());
+			for(Review r : userRev)
 			{
 				StringTokenizer tkn = new StringTokenizer(r.text);
 				int num_words = 0;
@@ -180,11 +170,25 @@ public class Clustering
 				{
 					total_score = total_score / num_words;
 				}
-				Matrix[i][businesses.get(r.business_id)] = (P * r.rating) + ((1-P)*total_score);
+				Matrix[i][r.business_id] = (P * r.rating) + ((1-P)*total_score);
 			}
 			i++;
 		}
 		return Matrix;
 	}
-
+	
+	public static double[] getAvgRatings(double[][] m) {
+		double[] ans = new double[m[0].length];
+		double[] cnt = new double[m[0].length];
+		for(int i = 0; i < m.length; ++i) {
+			for(int j = 0; j < m[0].length; ++j) {
+				ans[j] += m[i][j]; 
+				if(m[i][j] != 0) cnt[j]++;
+			}
+		}
+		for(int i = 0; i < m[0].length; i++) {
+			if(cnt[i] != 0) ans[i] /= cnt[i];
+		}
+		return ans;
+	}
 }
